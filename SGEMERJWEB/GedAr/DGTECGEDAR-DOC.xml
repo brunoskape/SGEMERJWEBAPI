@@ -1,0 +1,569 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- Documentação extra compartilhada por mais de um método ou sobrecarga da classe DGTECGEDAR -->
+<doc>
+  <members>
+    <member name="DGTECGEDARException">
+      <exception cref="T:DGTECGEDARDOTNET.DGTECGEDARException">
+        <para>
+          O motivo e código do erro estão presentes nas respectivas propriedades <see cref="P:DGTECGEDARDOTNET.DGTECGEDARException.Message"/>
+          e <see cref="P:DGTECGEDARDOTNET.DGTECGEDARException.CodigoErro"/> do objeto de exceção. 
+          Os possíveis códigos de erro estão definidos no enumerável
+          <see cref="T:DGTECGEDARDOTNET.DGTECGEDARException.TipoErroGEDAR"/>.
+        </para>
+        <para>
+          Para sistemas escritos em VB6 deve-se consultar
+          as propriedades <c>Err.Description</c> do VB6 e a propriedade <see cref="P:DGTECGEDARDOTNET.DGTECGEDAR.UltimoCodigoErro"/> do objeto
+          <see cref="T:DGTECGEDARDOTNET.DGTECGEDAR"/> que gerou o erro.
+        </para>
+      </exception>
+    </member>
+
+    <member name="IDTransacao.Parametro">
+      <param name="IDTransacao">
+        ID referente a uma transação não iniciada pelo objeto correntemente instanciado pela aplicação.
+        Parâmetro opcional com valor Default = "" indicando transação iniciada pela instância corrente        
+      </param>      
+    </member>
+
+    <member name="IDTransacao.RemarksGeral">
+      <para>
+        Caso o parâmetro <paramref name="IDTransacao"/> seja informado ele deve fazer
+        referência a uma transação iniciada por uma outra instância da classe <see cref="T:DGTECGEDARDOTNET.DGTECGEDAR"/>.
+        Este parâmetro é útil quando se deseja que um computador servidor finalize ou aborte a transação
+        iniciada pelo computador cliente.
+        O ID da transação pode ser obtido através da propriedade <see cref="P:DGTECGEDARDOTNET.DGTECGEDAR.IDTransacao"/> de
+        uma classe <see cref="T:DGTECGEDARDOTNET.DGTECGEDAR"/> instânciada.
+      </para>
+      <para>
+        Caso o parâmetro <paramref name="IDTransacao"/> seja omitido ou igual a "",
+        a propriedade <see cref="P:DGTECGEDARDOTNET.DGTECGEDAR.IDTransacao"/> do objeto GEDAR correntemente instanciado será utilizada. Para que a propriedade
+        <see cref="P:DGTECGEDARDOTNET.DGTECGEDAR.IDTransacao"/> esteja disponível uma transação deve ter sido
+        iniciada através da chamada ao método <see cref="M:DGTECGEDARDOTNET.DGTECGEDAR.IniciaTransacao(System.Int32)"/>.        
+      </para>      
+    </member>
+
+    <member name="MetodoTransacional.AcessoNegado">
+      <para>
+        Este método não pode participar de uma transação do GED, ou seja, 
+        não pode ser executado caso exista uma transação em andamento aberta pelo 
+        método <see cref="M:DGTECGEDARDOTNET.DGTECGEDAR.IniciaTransacao(System.Int32)"/>.
+        Caso tente ser executado durante uma transação será emitida uma excessão 
+        <see cref="T:DGTECGEDARDOTNET.DGTECGEDARException"/> com a propriedade
+        <see cref="P:DGTECGEDARDOTNET.DGTECGEDARException.CodigoErro"/> = EstadoTransacionalNaoPermitido.
+      </para>
+    </member>
+
+    <member name="MetodoTransacional.Gravacao">
+      <para>
+        <para>
+          Este método pode participar de uma transação iniciada através do método
+          <see cref="M:DGTECGEDARDOTNET.DGTECGEDAR.IniciaTransacao(System.Int32)"/>.
+          Ao final da transação todas as alterações poderão ser:
+          <list type="bullet">
+            <item>
+              confirmadas através de um dos métodos de finalização
+              <see cref="M:DGTECGEDARDOTNET.DGTECGEDAR.FinalizaTransacao(System.String)"/> ou
+              <see cref="M:DGTECGEDARDOTNET.DGTECGEDAR.FinalizaTransacaoDistribuida(ADODB.Connection,System.String)"/> ou
+            </item>
+            <item>
+              abortadas através do método <see cref="M:DGTECGEDARDOTNET.DGTECGEDAR.AbortaTransacao(System.String)"/>.
+            </item>
+          </list>
+        </para>
+        <para>
+          Quando dentro de uma transação, as alterações no documento realizadas por este método gerarão um bloqueio que
+          poderá ocasionar falha nas requisições de qualquer alteração no documento por outras conexões ao GED.
+        </para>
+      </para>
+    </member>
+
+    <member name="MetodoTransacional.LeituraPreTransacao">
+      <para>
+        Este método desconsiderará as operações de alteração do documento (substituição, exclusão e etc)
+        que ocorreram dentro de uma transação independente de fazer parte ou não desta transação.
+      </para>
+    </member>
+
+    <member name="MetodoTransacional.Leitura">
+      <para>
+        Este método considerará ou desconsiderará as operações de alteração do documento (substituição, exclusão e etc)
+        que ocorreram dentro de uma transação caso respectivamente faça parte ou não desta transação.
+      </para>
+    </member>
+
+    <member name="ArmazenaSubstitui.PreCondicoes">
+      <para>
+      <list type="table">
+        <listheader>
+          <description>Pré-condições de execução</description>
+        </listheader>
+        <item>
+          <description>
+            O arquivo a ser armazenado (parâmetro <paramref name="NomeArquivo"/>)
+            deve existir no caminho especificado e com permissão de leitura.
+          </description>
+        </item>
+        <item>
+          <description>
+            O arquivo contendo as assinaturas digitais (parâmetro <paramref name="NomeArquivoAssinatura"/>),
+            caso informado, deve existir no caminho especificado com permissão de leitura pelo usuário autenticado
+            no windows.
+          </description>
+        </item>
+        <item>
+          <description>
+            O arquivo de assinaturas digitais, caso existente, deve possuir uma assinatura válida do
+            documento a ser armazenado
+          </description>
+        </item>      
+      </list>
+      </para>
+    </member>
+
+    <member name="Parametro.NomeArquivoAssinatura">
+      <para>
+      O parâmetro opcional <paramref name="NomeArquivoAssinatura"/> se refere a um arquivo de assinatura digital
+      contendo uma ou mais assinaturas digitais relacionadas ao documento.
+      O arquivo deve ter o formato de um pacote padrão de assinatura digital (PKCS#7) que pode ser gerado
+      pelos componentes de assinatura digital (<see cref="N:DGTECCertDigital"/>).
+      Em geral este arquivo possui extensão p7s.
+      No caso de arquivos PDF com assinaturas digitais embutidas no documento,
+      a utilização deste arquivo é redundante e desnecessária.
+      </para>
+    </member>
+
+    <member name="Parametro.TipoDocumentoSistema">
+      <para>
+        O parâmetro opcional <paramref name="TipoDocumentoSistema"/> tem o valor 0 por padrão o que indica
+        um documento genérico para o sistema.
+        Outros tipos podem ser cadastrados junto aos administradores GED de forma
+        que seja possível a customização do local de armazenamento dos documentos 
+        e as permissões de acesso padrões para outros sistemas.
+      </para>
+    </member>
+
+    <member name="Parametro.TipoArquivo">
+      <para>
+      O parâmetro opcional <paramref name="TipoArquivo"/> pode ser informado de acordo com a tabela
+      <a href="736c717c-5f37-42aa-95d5-a2aa2b7762b2.htm">Tipo do arquivo</a>. Caso
+      não seja informado o sistema tenta identificar o tipo do arquivo através de sua extensão.
+      </para>
+    </member>
+
+    <member name="FinalizaTransacaoDistribuida.Parametros">
+      <param name="Conexao">Conexao do sistema cliente que executará a finalização da transação no GED</param>
+    </member>
+
+    <member name="FinalizaTransacaoDistribuida.Remarks">      
+      <para>
+        <para>
+          Para uso deste método é aconselhavel que a conexão (parâmetro <paramref name="Conexao"/>)
+          esteja em estado transacional a fim de que as operações
+          realizadas no GED possam ser finalizadas (commit) ou abortadas (rollback) em conjunto com
+          as operações realizadas no banco de dados do sistema cliente.
+        </para>        
+        <list type="table">
+          <listheader>
+            <description>Pré-condições de execução</description>
+          </listheader>
+          <item>
+            <description>Conexão aberta e em estado transacional junto ao banco de dados do sistema cliente</description>
+          </item>
+          <item>
+            <description>
+              A conexão (parâmetro <paramref name="Conexao"/>) tem que ter acesso ao sinônimo GED_FIMTRANS
+              apontando para procedimento armazenado no servidor de indexação do GED. O sinônimo pode ser criado através do comando
+              <para>
+                <c>create or replace synonym GEDAR_FIMTRANS for GED.OPERACAODISTTRANS_U_FIMTID;</c>
+              </para>
+            </description>
+          </item>
+          <item>
+            <description>
+              O método <see cref="M:DGTECGEDARDOTNET.DGTECGEDAR.IniciaTransacao(System.Int32)"/> deve ter sido chamado antes da execução deste método
+              ou então o parâmetro <paramref name="IDTransacao"/> informado.
+            </description>
+          </item>
+        </list>
+        <list type="table">
+          <listheader>
+            <description>Pós-condições a execução</description>
+          </listheader>
+          <item>
+            <description>
+              As operações realizadas dentro da transação são todas confirmadas com sucesso
+              em conjunto das operações de banco de dados realizadas no sistema cliente
+            </description>
+          </item>
+        </list>
+        <seealso cref="M:DGTECGEDARDOTNET.DGTECGEDAR.AbortaTransacao(System.String)"/>
+        <seealso cref="M:DGTECGEDARDOTNET.DGTECGEDAR.IniciaTransacao(System.Int32)"/>
+        <seealso cref="M:DGTECGEDARDOTNET.DGTECGEDAR.FinalizaTransacao(System.String)"/>
+      </para>
+    </member>
+
+    <member name="ObtemHistorico.SumarioParametros">
+      <summary>
+        Consulta histórico de acessos de uma ou todas as versões de um documento do GED
+      </summary>
+      <param name="IDDocumento">
+        ID do documento a ter seu histórico recuperado
+      </param>
+      <param name="Versao">
+        Numero da versão do documento a ser consultada.
+        Caso omitido ou igual a 0 trás o histórico de todas as versões do documento.
+      </param>
+      <param name="Ordenacao">
+        Ordenação pela qual os registros serão retornados.
+        Caso omitido trás por ordem descendente da data e hora da operação histórica.
+      </param>
+      <param name="DataHoraInicial">
+        Data e hora iniciais a partir da qual o histórico ser retornado.
+        O padrão é retornar todos os registros históricos independente da data da operação
+      </param>
+      <param name="NumMaxRegistros">
+        Número máximo de registros que serão retornados no DataSet.
+        O padrão é retornar todos os registros históricos
+      </param>
+      <returns>Retorna o histórico dos acessos a um documento ou uma suas versões</returns>
+    </member>
+
+    <member name="ObtemHistorico.Retorno">
+      <para>
+        Serão retornados pelo método uma tabela (DataTable ou ADODB.Recordset) com os seguintes campos:
+        <list type="table">
+          <listheader>
+            <term>Nome do campo</term>
+            <description>Descrição do campo</description>
+          </listheader>
+          <item>
+            <term>cod_tip_hist</term>
+            <description>
+              Código do tipo da operação realizada na versão do documento:
+              <list type="bullet">
+                <item>1 = Armazenamento</item>
+                <item>2 = Substituição com Versionamento</item>
+                <item>3 = Substituição sem Versionamento</item>
+                <item>4 = Recuperação</item>
+                <item>5 = Exclusão Lógica</item>
+                <item>6 = Exclusão Física</item>
+                <item>7 = Restauração de Exclusão</item>
+                <item>8	= Histórico de Acesso</item>
+              </list>
+            </description>
+          </item>
+          <item>
+            <term>descr_tip_hist</term>
+            <description>Descrição do tipo da operação realizada na versão do documento</description>
+          </item>
+          <item>
+            <term>seq_vers_docto</term>
+            <description>Número da versão do documento que sofreu a operação</description>
+          </item>
+          <item>
+            <term>dt_hist</term>
+            <description>Data e Hora em que a operação foi realizada</description>
+          </item>
+          <item>
+            <term>cod_usu</term>
+            <description>Usuário autenticado no sistema de segurança que realizou a operação</description>
+          </item>
+          <item>
+            <term>maquina</term>
+            <description>Máquina ou IP da rede que realizou a operação</description>
+          </item>
+          <item>
+            <term>usu_sist_oper</term>
+            <description>Usuário autenticado no Windows que realizou a operação</description>
+          </item>
+          <item>
+            <term>sg_sist</term>
+            <description>Sigla do sistema em que o usuário estava autenticado ao realizar a operação</description>
+          </item>
+        </list>
+      </para>
+    </member>
+
+    <member name="ObtemHistorico.PrePosCondicoes">
+      <list type="table">
+        <listheader>
+          <description>Pré-condições de execução</description>
+        </listheader>
+        <item>
+          <description>
+            O ID de documento (parâmetro <paramref name="IDDocumento"/>) existente
+          </description>
+        </item>
+        <item>
+          <description>O usuário atualmente autenticado no sistema de segurança tem permissão de consultar o histórico do documento</description>
+        </item>
+      </list>
+      <list type="table">
+        <listheader>
+          <description>Pós-condições a execução</description>
+        </listheader>
+        <item>
+          <description>Serão retornados os registros históricos do documento</description>
+        </item>
+      </list>
+    </member>
+
+    <member name="ObtemMetadados.Retorno">
+      <para>
+        Serão retornados pelo método uma tabela (DataTable ou ADORecordset) com os seguintes campos relativos aos
+        metadados gerados automaticamente pelo GED:
+        <list type="table">
+          <listheader>
+            <term>Nome do campo</term>
+            <description>Descrição do campo</description>
+          </listheader>
+          <item>
+            <term>seq_vers_docto</term>
+            <description>Número sequencial da versão do documento</description>
+          </item>
+          <item>
+            <term>dt_inc</term>
+            <description>Data e hora do armazenamento inicial da versão do documento</description>
+          </item>
+          <item>
+            <term>cod_usu_inc</term>
+            <description>Código do usuário no sistema de segurança que incluiu a versão do documento</description>
+          </item>
+          <item>
+            <term>dt_excl</term>
+            <description>Data e hora da exclusão da versão do documento</description>
+          </item>
+          <item>
+            <term>cod_usu_excl</term>
+            <description>Código do usuário no sistema de segurança que excluiu a versão do documento</description>
+          </item>
+          <item>
+            <term>cod_sit_docto</term>
+            <description>
+              Código da situação da versão do docummento:
+              <list type="bullet">
+                <item>0 = Ativo</item>
+                <item>1 = Excluído logicamente</item>
+                <item>2 = Excluído fisicamente</item>
+                <item>3 = Substituído com versionamento</item>
+                <item>4 = Substituido sem versionamento</item>
+              </list>
+            </description>
+          </item>
+          <item>
+            <term>descr_sit_docto</term>
+            <description>Descrição da situação da versão do docummento</description>
+          </item>
+          <item>
+            <term>nome_arq_orig</term>
+            <description>Nome original do arquivo relativo a versão do documento armazenada</description>
+          </item>
+          <item>
+            <term>ind_ass_dig</term>
+            <description>Indicador (S/N) se possui assinatura digital associada</description>
+          </item>
+          <item>
+            <term>cod_tip_docto</term>
+            <description><a href="736c717c-5f37-42aa-95d5-a2aa2b7762b2.htm">Código do tipo do Documento</a>
+            </description>
+          </item>
+          <item>
+            <term>descr_tip_docto</term>
+            <description>Descrição do tipo do documento </description>
+          </item>
+          <item>
+            <term>tam_docto</term>
+            <description>Tamanho do documento em bytes</description>
+          </item>
+          <item>
+            <term>cod_tip_docto_compact</term>
+            <description>
+              <a href="736c717c-5f37-42aa-95d5-a2aa2b7762b2.htm">Código do tipo da compactação do documento</a>
+            </description>
+          </item>
+          <item>
+            <term>descr_tip_docto_compact</term>
+            <description>Descrição do tipo da compactação do documento</description>
+          </item>
+          <item>
+            <term>tam_docto_compact</term>
+            <description>Tamanho do documento compactado em bytes</description>
+          </item>
+          <item>
+            <term>content_type_web</term>
+            <description>Tipo do conteúdo do documento para abertura pelo WebBrowser</description>
+          </item>
+          <item>
+            <term>num_pag</term>
+            <description>Número de páginas do documento PDF</description>
+          </item>
+          <item>
+            <term>num_ass_dig_pdf</term>
+            <description>Número de assinaturas digitais embutidas no documento PDF</description>
+          </item>
+          <item>
+            <term>ind_docto_branco</term>
+            <description>Indicador ('S' ou 'N') se o documento é branco ou não</description>
+          </item>
+        </list>
+        <para>
+          Além dos metadados gerados automaticamente, novos metadados customizados podem ser
+          adicionados aos documentos através de chamadas ao método 
+          <see cref="M:DGTECGEDARDOTNET.DGTECGEDAR.AdicionaMetadadoCustomizado(System.String,DGTECGEDARDOTNET.MetadadoCustomizado)"/>.
+        </para>
+      </para>      
+    </member>
+  
+    <member name="ObtemMetadados.SumarioParametros">
+      <summary>
+        Consulta metadados gerados automaticamente de uma ou todas as versões de um documento armazenado no GED.
+      </summary>
+      <param name="IDDocumento">
+        ID do documento a ter seus metadados recuperados.
+      </param>
+      <param name="Versao">
+        Numero da versão do documento.
+        Caso omitido ou igual a 0 trás os metadados de todas as versões do documento.
+      </param>
+      <param name="Ordenacao">
+        Ordenação pela qual os registros de metadados serão retornados:
+        crescente ou decrescente do seqüencial de versão do documento. Caso omitido será retornado em ordem decrescente.
+      </param>
+      <param name="NumMaxRegistros">
+        Número máximo de versões a serem retornadas considerando a ordenação definida no parâmetro anterior.
+        Parâmetro opcional. O padrão é retornar o conjunto completo dos metadados de todas as versões do documento.
+      </param>
+      <returns>Retorna os metadados do documento</returns>
+    </member>
+
+    <member name="ObtemMetadados.PrePosCondicoes">      
+      <list type="table">
+        <listheader>
+          <description>Pré-condições de execução</description>
+        </listheader>
+        <item>
+          <description>
+            O ID de documento (parâmetro <paramref name="IDDocumento"/>) existente
+          </description>
+        </item>
+        <item>
+          <description>O usuário atualmente autenticado no sistema de segurança tem permissão de consultar os metadados do documento</description>
+        </item>
+      </list>
+      <list type="table">
+        <listheader>
+          <description>Pós-condições a execução</description>
+        </listheader>
+        <item>
+          <description>Serão retornados os metadados das versões solicitadas do documento</description>
+        </item>
+      </list>
+    </member>
+
+    <member name="ObtemMetadados.ExemploDOTNET">
+      <example>
+        Como obter o tamanho em bytes da última versão de um documento armazenado no GED
+        <code language="vbnet">
+          <code source="..\..\GEDTeste\GEDAR-Exemplos.vb" region="TamanhoDocumentoGED"/>
+        </code>
+      </example>
+    </member>
+
+    <member name="GEDCache.Geral">
+      <para>
+        A forma mais fácil de se utilizar o cache de documentos nos BDCs é atribuindo True à propriedade
+        <see cref="P:DGTECGEDARDOTNET.DGTECGEDAR.UsaCacheWeb"/>. Desta forma, caso o BDC mais próximo à máquina que instanciou a classe esteja
+        disponível, as operações de recuperação usarão o serviço de cache de documentos.        
+      </para>
+    </member>
+
+    <member name="ExecutaPesquisaTextual.RemarksGeral">
+      <para>
+        O parâmetro <paramref name="TipoPesquisa"/> indica a forma pelo qual o texto indicado pelo
+        o parâmetro <paramref name="TextoPesquisa"/> será pesquisado nos documentos. O texto de pesquisa pode 
+        <list type="number">
+          <item> 
+            representar uma cláusula
+            referente a função <a target="_blank" href="http://download.oracle.com/docs/cd/B19306_01/text.102/b14218/cqoper.htm">CONTAINS (link externo)</a>
+            do Oracle Text caso o tipo de pesquisa seja OracleTextContains.
+          </item>
+          <item>
+            uma lista de palavras, separadas por espaço, a serem pesquisadas utilizando-se o critério indicado pelo parametro            
+            <paramref name="TipoPesquisa"/> com valor diferente de OracleTextContains.
+          </item>
+        </list>
+        Para maiores detalhes sobre os tipos de pesquisa disponíveis consulte a documentação 
+        <see cref="T:DGTECGEDARDOTNET.DGTECGEDAR.TipoPesquisaTextual"/>. O valor padrão para o parâmetro 
+        opcional <paramref name="TipoPesquisa"/> é Conector_E.
+      </para>
+      <para>
+        Para pesquisas do tipo ProximidadeOrdenada ou ProximidadeDesordenada a distância mínima entre as palavras é definida pela propriedade
+        <see cref="P:DGTECGEDARDOTNET.DGTECGEDAR.PesquisaTextualMaxDistanciaPalavras" />. 
+        Veja a documentação da propriedade para maiores detalhes.
+      </para>
+      <para>
+        Para todos os tipos de pesquisa a relevância (Score) mínima é definida pela propriedade
+        <see cref="P:DGTECGEDARDOTNET.DGTECGEDAR.PesquisaTextualRelevanciaMinima" />. 
+        Veja a documentação da propriedade para maiores detalhes.
+      </para>
+      <para>
+        Documentos incluídos durante uma transação em aberto ou em períodos inferiores a cerca de 10 minutos
+        não estarão disponíveis para pesquisa textual pois não se econtrarão indexados pelo GED.
+        Caso o parâmetro <paramref name="EmiteErroIndexacaoIndisponivel"/> = True e existam documentos sendo
+        pesquisados nesta situação será emitida uma excessão <see cref="T:DGTECGEDARDOTNET.DGTECGEDARException"/>.
+      </para>
+    </member>
+
+    <member name="ExecutaPesquisaTextual.ParametrosGerais">
+      <param name="TextoPesquisa">
+        Lista de palavras a serem pesquisadas separadas por espaços ou cláusula de busca compativel com a função CONTAINS do Oracle Text
+      </param>
+      <param name="TipoPesquisa">
+        Indica o tipo de pesquisa textual que será efetuada utilizando-se o parâmetro <paramref name="TextoPesquisa"/>
+      </param>
+      <param name="EmiteErroIndexacaoIndisponivel">
+        Indica se deve ser emitido erro caso exista algum documento a ser pesquisado que ainda não tenha sido indexado ou esteja em processo de indexação
+      </param>
+      <returns>
+        Lista de documentos que atendem aos requisitos de pesquisa informados.
+      </returns>      
+    </member>
+
+    <member name="MetadadoCustomizado.ObservacaoPropriedades">
+      <para>
+      Maiores detalhes sobre esta propriedade pode ser obtido na documentação da classe (<see cref="T:DGTECGEDARDOTNET.MetadadoCustomizado"/>).
+      <seealso cref="T:DGTECGEDARDOTNET.MetadadoCustomizado"/>
+      </para>
+    </member>
+
+    <member name="MetadadoCustomizado.ObservacaoValor">
+      <para>
+        A fim de atribuir um valor de metadado deve-se usar uma das propriedades
+        <see cref="P:DGTECGEDARDOTNET.MetadadoCustomizado.ValorString"/>, <see cref="P:DGTECGEDARDOTNET.MetadadoCustomizado.ValorInteiro"/>,
+        <see cref="P:DGTECGEDARDOTNET.MetadadoCustomizado.ValorData"/>, <see cref="P:DGTECGEDARDOTNET.MetadadoCustomizado.ValorNumerico"/>
+        ou <see cref="P:DGTECGEDARDOTNET.MetadadoCustomizado.ValorDecimal"/>. Uma instância da classe Metadado se refere a somente
+        um valor. Portanto a última chamada a um dos métodos de atribuição de valor indicará o valor do metadado.
+      </para>
+    </member>
+
+    <member name="MetadadoCustomizado.DecimalDouble">
+      <para>
+        Os tipos tipos Decimal e Double usados pelas respectivas propriedades <see cref="P:DGTECGEDARDOTNET.MetadadoCustomizado.ValorDecimal"/> e
+        <see cref="P:DGTECGEDARDOTNET.MetadadoCustomizado.ValorNumerico"/> são armazenados de forma equivalente no GED
+        (<see cref="P:DGTECGEDARDOTNET.MetadadoCustomizado.TipoValor"/> = "NUMBER")
+        diferindo apenas na precisão possível quanto ao ponto flutuante. O tipo
+        Decimal é mais preciso mas não é suportado pelo ambiente de programação Visual Basic 6. Maiores detalhes podem ser
+        obtidos na documentação do MSDN para os tipos Decimal e Double.
+      </para>      
+    </member>
+
+    <member name="MetodoAplicavelTodasVersoesDocumento">
+      <para>
+        As alterações efetuadas por este método aplica-se a todas as versões do documento não necessitando-se repetir 
+        sua chamada a cada substituição ou exclusão de uma versão do documento.
+      </para>
+    </member>
+
+  </members>
+</doc>
+
